@@ -14,14 +14,13 @@ interface Props {
 }
 
 
-class AddAuthor extends Component<Props> {
+const AddAuthor = (props: Props) => {
 
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    this.props.form.validateFields((err, { name }) => {
+    props.form.validateFields((err, { name }) => {
       if (!err) {
-        console.log('Received values of form: ');
-        this.props.mutate({
+        props.mutate({
           variables: {
             name
           },
@@ -32,17 +31,15 @@ class AddAuthor extends Component<Props> {
           ]
         });
       }
-      this.props.form.resetFields();
+      props.form.resetFields();
     });
   };
 
-  render() {
-
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator } = props.form
     return (
       <StyledAddAuthorContainer>
         <Typography.Title level={2}>Author</Typography.Title>
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Form.Item>
             {getFieldDecorator('name')(
               <Input placeholder="Add Author"></Input>
@@ -52,7 +49,6 @@ class AddAuthor extends Component<Props> {
         </Form>
       </StyledAddAuthorContainer>
     )
-  }
 }
 
 const WrappedAddAuthor = Form.create({ name: 'add_book' })(AddAuthor);

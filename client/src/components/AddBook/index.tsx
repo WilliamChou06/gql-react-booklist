@@ -12,25 +12,13 @@ interface Props {
   addBookMutation: any
 }
 
-interface State {
-  title: string,
-  edition: string,
-  author: string
-}
-
-class AddBook extends Component<Props, State> {
-  state = {
-    title: '',
-    edition: '',
-    author: ''
-  }
-
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+const AddBook = (props: Props) => {
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    this.props.form.validateFields((err, {title, edition, authors}) => {
+    props.form.validateFields((err, {title, edition, authors}) => {
       if (!err) {
-        console.log('Received values of form: ', );
-         this.props.addBookMutation({
+         props.addBookMutation({
           variables: {
             title,
             edition,
@@ -40,18 +28,18 @@ class AddBook extends Component<Props, State> {
             query: getBooksQuery
           }]
         });
-        this.props.form.resetFields();
+        props.form.resetFields();
 
       }
     });
   };
 
-  render() {
 
-    const { getFieldDecorator } = this.props.form
+
+    const { getFieldDecorator } = props.form
 
     // Wait for query to load in
-    if (this.props.getAuthorsQuery.loading) {
+    if (props.getAuthorsQuery.loading) {
       return <Spinner />
     }
 
@@ -59,7 +47,7 @@ class AddBook extends Component<Props, State> {
       <StyledAddBookContainer>
         <Typography.Title level={2}>Book</Typography.Title>
         <p>All fields are required! *</p>
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={handleSubmit}>
         <Form.Item>
           {getFieldDecorator('title')(
             <Input placeholder="Book Title"></Input>
@@ -73,14 +61,14 @@ class AddBook extends Component<Props, State> {
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('authors')(<Select mode="multiple" placeholder="Select authors">
-            {this.props.getAuthorsQuery.authors.map((author) => <Select.Option key={author.id} value={author.id}>{author.name}</Select.Option>)}
+            {props.getAuthorsQuery.authors.map((author) => <Select.Option key={author.id} value={author.id}>{author.name}</Select.Option>)}
           </Select>)}
         </Form.Item>
         <Button htmlType="submit" type="primary" ghost>Add Book</Button>
       </Form>
       </StyledAddBookContainer>
     )
-  }
+  
 }
 
 // antd form higher order function
