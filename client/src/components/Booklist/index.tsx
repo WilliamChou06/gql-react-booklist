@@ -185,7 +185,7 @@ class BookList extends Component<Props, State> {
 
     return (
       <StyledBooklistContainer>
-        <Table dataSource={this.props.data.books} columns={windowWidth > 960 ? columns : columnsMobile} size="middle" />
+        <Table dataSource={this.props.data.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'default' : 'small'} />
       </StyledBooklistContainer>
     );
   }
