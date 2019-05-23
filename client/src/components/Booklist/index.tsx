@@ -158,9 +158,16 @@ class BookList extends Component<Props> {
         }
       }
     ]
+
+    const windowWidth = window.innerWidth;
+    const columnsMobile = columns.map((column) => {
+      delete column.width;
+      return column;
+    }).filter((column) => column !== columns[2]);
+
     return (
       <StyledBooklistContainer>
-        <Table dataSource={this.props.data.books} columns={columns} size="middle" />
+        <Table dataSource={this.props.data.books} columns={windowWidth > 960 ? columns : columnsMobile} size="middle" />
       </StyledBooklistContainer>
     );
   }
