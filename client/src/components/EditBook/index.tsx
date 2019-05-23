@@ -58,7 +58,6 @@ const EditBook = (props: Props) => {
   // Store book object in variable
   let book = props.getBookQuery.book;
   let authorIds = book.authors.map(author => author.id)
-
   return (
     <StyledEditBookWrapper>
       <div>
@@ -75,7 +74,7 @@ const EditBook = (props: Props) => {
           {console.log(book.authors)}
           <Form.Item>
             {getFieldDecorator('edition', {
-              // Initial value takes a moment object
+              // set book edition moment
               initialValue: moment(book.edition)
             })(
               <DatePicker placeholder="Select edition date" format="YYYY-MM-DD HH:mm:ss" />

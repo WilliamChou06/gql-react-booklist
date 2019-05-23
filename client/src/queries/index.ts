@@ -13,6 +13,7 @@ export const getBookQuery = gql`
   query($id: ID) {
     book(id: $id) {
       title
+      edition
       authors {
         id
         name
