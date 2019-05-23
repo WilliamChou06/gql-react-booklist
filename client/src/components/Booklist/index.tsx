@@ -15,11 +15,29 @@ interface Props {
   data: any;
 }
 
-class BookList extends Component<Props> {
+interface State {
+  searchText: string,
+  authorsTabFilter: string,
+  windowWidth: number
+}
+
+class BookList extends Component<Props, State> {
   state = {
     searchText: '',
-    authorsTabFilter: ''
+    authorsTabFilter: '',
+    windowWidth: window.innerWidth
   }
+
+  // Updating window width in state
+  componentDidMount() {
+    window.addEventListener('resize', this.updateWindowWidth)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowWidth)
+  }
+
+  updateWindowWidth = () => this.setState({windowWidth: window.innerWidth})
 
   // Edition sorting method
 
