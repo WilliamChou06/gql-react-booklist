@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { graphql, compose } from 'react-apollo';
-import { getAuthorsQuery, addBookMutation, getBookQuery, editBookMutation, getBooksQuery } from '../../queries';
+import { getAuthorsQuery, getBookQuery, editBookMutation, getBooksQuery } from '../../queries';
 import { Form, Input, DatePicker, Select, Typography } from 'antd';
 import { StyledButton, StyledEditBookWrapper, StyledSpinnerWrapper } from './style';
 import Spinner from '../Spinner';
@@ -10,7 +10,6 @@ interface Props {
   data: any;
   form: any;
   getAuthorsQuery: any;
-  addBookMutation: any;
   match: any;
   getBookQuery: any;
   editBookMutation: any;
@@ -104,7 +103,6 @@ const WrappedEditBook = Form.create({ name: 'edit_book' })(EditBook);
 // @ts-ignore
 export default compose(
   graphql(getAuthorsQuery, { name: 'getAuthorsQuery' }),
-  graphql(addBookMutation, { name: 'addBookMutation' }),
   graphql(editBookMutation, { name: 'editBookMutation' }),
   graphql(getBookQuery, {
     name: 'getBookQuery',

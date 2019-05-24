@@ -126,11 +126,20 @@ const Mutation = new GraphQLObjectType({
         edition: { type: GraphQLString }
       },
       resolve(parent, { id, title, authorsId, edition }) {
-        return Book.findOneAndUpdate({ _id: id }, {$set: {
+        return Book.findOneAndUpdate({ _id: id }, { $set: {
           title,
           authorsId,
           edition
         }});
+      }
+    },
+    deleteBook: {
+      type: BookType,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLID) }
+      },
+      resolve(parent, { id }) {
+        return Book.findByIdAndRemove(id);
       }
     }
   }

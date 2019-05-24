@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { graphql, compose } from 'react-apollo';
 import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../../queries';
 import { Form, Input, Button, DatePicker, Select, Typography } from 'antd'

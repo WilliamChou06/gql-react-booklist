@@ -66,6 +66,16 @@ export const editBookMutation = gql`
   }
 `;
 
+export const deleteBookMutation = gql`
+  mutation($id: ID!) {
+    deleteBook(id: $id){
+      id,
+      title,
+      edition
+    }
+  }
+`
+
 export const addAuthorMutation = gql`
   mutation($name: String!) {
     addAuthor(name: $name) {

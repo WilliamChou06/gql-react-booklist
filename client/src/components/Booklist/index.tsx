@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import moment from 'moment';
 import _ from 'lodash';
-import { getBooksQuery } from '../../queries';
+import { getBooksQuery, deleteBookMutation } from '../../queries';
 import { StyledBooklistContainer } from './style';
 import Spinner from '../Spinner';
 import { Link } from 'react-router-dom';
@@ -13,6 +13,8 @@ import Highlighter from 'react-highlight-words';
 
 interface Props {
   data: any;
+  getBooksQuery: any;
+  deleteBookMutation: any;
 }
 
 interface State {
@@ -37,7 +39,19 @@ class BookList extends Component<Props, State> {
     window.removeEventListener('resize', this.updateWindowWidth)
   }
 
-  updateWindowWidth = () => this.setState({windowWidth: window.innerWidth})
+  updateWindowWidth = () => this.setState({ windowWidth: window.innerWidth })
+
+  handleDeleteBook = (id) => {
+    this.props.deleteBookMutation({
+      variables: {
+        id
+      },
+      refetchQueries: [{
+        query: getBooksQuery
+      }]
+    });
+    return false;
+  }
 
   // Edition sorting method
 
@@ -56,7 +70,7 @@ class BookList extends Component<Props, State> {
   // Ugly implementation
   getAllAuthorsList = () => {
     const authorsFilter = [];
-    const books = this.props.data.books;
+    const books = this.props.getBooksQuery.books;
     books.forEach(book => book.authors.forEach(author => authorsFilter.push({ text: author.name, value: author.name })));
     return _.uniqBy(authorsFilter, 'value')
   }
@@ -126,7 +140,7 @@ class BookList extends Component<Props, State> {
   };
 
   render() {
-    if (this.props.data.loading) {
+    if (this.props.getBooksQuery.loading) {
       return <Spinner />
     }
 
@@ -172,7 +186,7 @@ class BookList extends Component<Props, State> {
           // Rendering actions for each table item
           // Icon style is in-line because it's too much of a hassle to 
           // put in style.ts at the moment
-          return <span><Link to={`/edit/${book.id}`}><Icon style={{ fontSize: '18px' }} type="edit" /></Link></span>
+          return <span style={{ display: 'flex', justifyContent: 'space-evenly' }}><Link title="Edit" to={`/edit/${book.id}`}><Icon style={{ fontSize: '18px' }} type="edit" /></Link><a title="Delete" onClick={() => this.handleDeleteBook(book.id)}><Icon style={{ fontSize: '18px', color: '#ff4d4f' }} type="delete" /></a></span>
         }
       }
     ]
@@ -185,11 +199,14 @@ class BookList extends Component<Props, State> {
 
     return (
       <StyledBooklistContainer>
-        <Table dataSource={this.props.data.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'default' : 'small'} />
+        <Table dataSource={this.props.getBooksQuery.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'default' : 'small'} />
       </StyledBooklistContainer>
     );
   }
 };
 
 // @ts-ignore
-export default graphql(getBooksQuery)(BookList);
+export default compose(
+  graphql(getBooksQuery, { name: 'getBooksQuery' }),
+  graphql(deleteBookMutation, { name: 'deleteBookMutation' })
+)(BookList)
