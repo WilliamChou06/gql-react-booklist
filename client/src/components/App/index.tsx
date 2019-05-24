@@ -6,9 +6,12 @@ import Spinner from '../Spinner';
 const Booklist = lazy(() => import('../Booklist'));
 const UserInput = lazy(() => import('../UserInput'));
 
+// Check if production:
 // React Google Analytics config
-ReactGA.initialize(process.env.GA_TRACKING_CODE || '');
-ReactGA.pageview(window.location.pathname + window.location.search);
+if (process.env.NODE_ENV === 'production') {
+  ReactGA.initialize(process.env.GA_TRACKING_CODE);
+  ReactGA.pageview(window.location.pathname + window.location.search);
+}
 
 const App: React.FC = () => (
   <StyledApp>
