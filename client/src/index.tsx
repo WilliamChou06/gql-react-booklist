@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { createGlobalStyle } from 'styled-components';
 import Spinner from './components/Spinner';
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
