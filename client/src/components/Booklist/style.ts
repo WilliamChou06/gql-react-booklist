@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { animated } from 'react-spring/renderprops'
 
-export const StyledBooklistContainer = styled.div`
+export const StyledBooklistContainer = styled(animated.div)`
   flex: 2;
   padding: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);

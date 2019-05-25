@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { getBooksQuery, deleteBookMutation } from '../../queries';
 import { StyledBooklistContainer } from './style';
 import Spinner from '../Spinner';
+import { Spring, animated } from 'react-spring/renderprops';
 import { Link } from 'react-router-dom';
 
 
@@ -198,9 +199,14 @@ class BookList extends Component<Props, State> {
     }).filter((column) => column !== columns[2]);
 
     return (
-      <StyledBooklistContainer>
-        <Table dataSource={this.props.getBooksQuery.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'default' : 'small'} />
-      </StyledBooklistContainer>
+      <Spring native
+        from={{ opacity: 0, marginTop: -1000 }}
+        to={{ opacity: 1, marginTop: 0 }}>
+        {animProps => <StyledBooklistContainer style={animProps}>
+          <Table dataSource={this.props.getBooksQuery.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'default' : 'small'} />
+        </StyledBooklistContainer>}
+      </Spring>
+
     );
   }
 };

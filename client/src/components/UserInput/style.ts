@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { animated } from 'react-spring/renderprops';
 
-export const UserInputWrapper = styled.div`
+export const UserInputWrapper = styled(animated.div)`
   flex: 1;
   padding: 12px;
 

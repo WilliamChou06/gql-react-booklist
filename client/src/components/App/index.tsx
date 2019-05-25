@@ -13,6 +13,8 @@ if (process.env.NODE_ENV === 'production') {
   ReactGA.pageview(window.location.pathname + window.location.search);
 }
 
+
+
 const App: React.FC = () => (
   <StyledApp>
     <Suspense fallback={<Spinner />}>
