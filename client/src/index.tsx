@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import Spinner from './components/Spinner';
+import { Transition, animated, config } from 'react-spring/renderprops'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
 import ApolloClient from 'apollo-boost';
@@ -19,18 +20,38 @@ const client = new ApolloClient({
 
 const history = createBrowserHistory();
 
+const AnimatedRoute = ({ children }) => (
+  <Route
+    render={({ location }) => (
+      <Transition
+        native
+        items={location}
+        keys={location => location.pathname}
+        from={{ opacity: 1, transform: 'scale(0)' }}
+        enter={{ opacity: 1, transform: 'scale(1)' }}
+        leave={{ display: 'none', transform: 'scale(0)', pointerEvents: 'none' }}>
+        {location => style => <animated.div style={style}>{children(location)}</animated.div>}
+      </Transition>
+    )}
+  />
+)
+
 
 ReactDOM.render(
   <ApolloProvider client={client}>
     <BrowserRouter history={history}>
-      <Switch>
-        <Route exact path="/" render={(props) => <Suspense fallback={<Spinner />}>
-          <App {...props} />
-        </Suspense>} />
-        <Route path="/edit/:bookId" render={(props) => <Suspense fallback={<Spinner />}>
-          <EditBook {...props} />
-        </Suspense>} />
-      </Switch>
+      <AnimatedRoute>
+        {location => (
+          <Switch location={location}>
+          <Route exact path="/" render={(props) => <Suspense fallback={<Spinner />}>
+            <App {...props} />
+          </Suspense>} />
+          <Route path="/edit/:bookId" render={(props) => <Suspense fallback={<Spinner />}>
+            <EditBook {...props} />
+          </Suspense>} />
+        </Switch>
+        )}
+        </AnimatedRoute>
     </BrowserRouter>
   </ApolloProvider>
   , document.getElementById('root'));

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { getBooksQuery, deleteBookMutation } from '../../queries';
 import { StyledBooklistContainer } from './style';
 import Spinner from '../Spinner';
-import { Spring, animated } from 'react-spring/renderprops';
+import { Spring, config } from 'react-spring/renderprops';
 import { Link } from 'react-router-dom';
 
 
@@ -200,8 +200,10 @@ class BookList extends Component<Props, State> {
 
     return (
       <Spring native
-        from={{ opacity: 0, marginTop: -1000 }}
-        to={{ opacity: 1, marginTop: 0 }}>
+      config={config.gentle}
+      from={{  transform: 'scale(0)', backfaceVisibility: 'hidden'}}
+      to={{ opacity: 1, transform: 'scale(1)', backfaceVisibility: 'hidden'}}>
+        
         {animProps => <StyledBooklistContainer style={animProps}>
           <Table dataSource={this.props.getBooksQuery.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'default' : 'small'} />
         </StyledBooklistContainer>}

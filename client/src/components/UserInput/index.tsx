@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { UserInputWrapper } from './style';
 import Spinner from '../Spinner';
-import { Spring, animated } from 'react-spring/renderprops';
+import { Spring, config } from 'react-spring/renderprops';
 
 
 
@@ -12,8 +12,9 @@ const AddBook = lazy(() => import('../AddBook'))
 
 const UserInput = () => (
   <Spring native
-  from={{ opacity: 0, marginTop: -1000 }}
-  to={{ opacity: 1, marginTop: 0 }}>
+  config={config.gentle}
+  from={{  transform: 'scale(0)'}}
+  to={{  transform: 'scale(1)'}}>
   {props => <UserInputWrapper style={props}>
     <Suspense fallback={<Spinner />}>
       <AddAuthor />

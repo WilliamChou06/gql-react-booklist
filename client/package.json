@@ -22,6 +22,7 @@
     "react-scripts": "3.0.1",
     "react-spring": "^8.0.20",
     "styled-components": "^4.2.0",
+    "svg-loaders-react": "^0.4.0",
     "typescript": "3.4.5"
   },
   "scripts": {

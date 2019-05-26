@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { Button } from 'antd'
+import { Button } from 'antd';
+import { animated } from 'react-spring/renderprops';
 
 export const StyledButton = styled(Button)`
   margin-left: 6px;
 `
 
-export const StyledEditBookWrapper = styled.div`
+export const StyledEditBookWrapper = styled(animated.div)`
   height: 100vh;
   padding: 24px;
   display: flex;

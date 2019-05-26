@@ -4,6 +4,7 @@ import { getAuthorsQuery, getBookQuery, editBookMutation, getBooksQuery } from '
 import { Form, Input, DatePicker, Select, Typography } from 'antd';
 import { StyledButton, StyledEditBookWrapper, StyledSpinnerWrapper } from './style';
 import Spinner from '../Spinner';
+import { Spring, config } from 'react-spring/renderprops';
 import moment from 'moment';
 
 interface Props {
@@ -58,7 +59,13 @@ const EditBook = (props: Props) => {
   let book = props.getBookQuery.book;
   let authorIds = book.authors.map(author => author.id)
   return (
-    <StyledEditBookWrapper>
+
+    <Spring native
+      config={config.gentle}
+      from={{  transform: 'scale(0)', backfaceVisibility: 'hidden'}}
+      to={{ opacity: 1, transform: 'scale(1)', backfaceVisibility: 'hidden'}}>
+        
+        {animProps => <StyledEditBookWrapper style={animProps}>
       <div>
         <Typography.Title level={2}>Editing: {book.title}</Typography.Title>
         <Form onSubmit={handleSubmit}>
@@ -70,7 +77,6 @@ const EditBook = (props: Props) => {
 
             )}
           </Form.Item>
-          {console.log(book.authors)}
           <Form.Item>
             {getFieldDecorator('edition', {
               // set book edition moment
@@ -91,7 +97,9 @@ const EditBook = (props: Props) => {
           <StyledButton onClick={handleCancel} type="danger" ghost>Cancel</StyledButton>
         </Form>
       </div>
-    </StyledEditBookWrapper>
+    </StyledEditBookWrapper>}
+      </Spring>
+    
   )
 
 }
