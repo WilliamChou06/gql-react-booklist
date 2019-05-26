@@ -1,3 +1,4 @@
+const compression = require('compression');
 const express = require('express');
 const path = require('path');
 const graphqlHTTP = require('express-graphql');
@@ -7,8 +8,12 @@ const cors = require('cors');
 
 const app = express();
 
+
 // env file import
 require('dotenv').config();
+
+// gzip compression
+app.use(compression({level: 9}));
 
 // CORS config | Allow cross-origin requests
 app.use(cors());
