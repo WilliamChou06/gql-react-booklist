@@ -2,7 +2,7 @@ import React from 'react';
 import { graphql, compose } from 'react-apollo';
 import { getAuthorsQuery, getBookQuery, editBookMutation, getBooksQuery } from '../../queries';
 // import { Form, Input, DatePicker, Select, Typography } from 'antd';
-import { StyledButton, StyledEditBookWrapper, StyledSpinnerWrapper } from './style';
+import { StyledButton, StyledEditBookWrapper, StyledSpinnerWrapper, StyledEditBookContainer } from './style';
 import Spinner from '../Spinner';
 import { Spring, config } from 'react-spring/renderprops';
 import moment from 'moment';
@@ -73,7 +73,7 @@ const EditBook = (props: Props) => {
       to={{ opacity: 1, transform: 'scale(1)', backfaceVisibility: 'hidden'}}>
         
         {animProps => <StyledEditBookWrapper style={animProps}>
-      <div>
+      <StyledEditBookContainer>
         <Typography.Title level={2}>Editing: {book.title}</Typography.Title>
         <Form onSubmit={handleSubmit}>
           <Form.Item>
@@ -103,7 +103,7 @@ const EditBook = (props: Props) => {
           <StyledButton htmlType="submit" type="primary" ghost>Edit Book</StyledButton>
           <StyledButton onClick={handleCancel} type="danger" ghost>Cancel</StyledButton>
         </Form>
-      </div>
+      </StyledEditBookContainer>
     </StyledEditBookWrapper>}
       </Spring>
     
