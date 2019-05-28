@@ -1,6 +1,10 @@
 import styled from 'styled-components';
-import { Button } from 'antd';
+// import { Button } from 'antd';
 import { animated } from 'react-spring/renderprops';
+
+// antd import
+import Button from 'antd/lib/button';
+
 
 export const StyledButton = styled(Button)`
   margin-left: 6px;

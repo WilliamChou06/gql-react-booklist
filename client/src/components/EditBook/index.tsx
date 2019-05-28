@@ -1,11 +1,18 @@
 import React from 'react';
 import { graphql, compose } from 'react-apollo';
 import { getAuthorsQuery, getBookQuery, editBookMutation, getBooksQuery } from '../../queries';
-import { Form, Input, DatePicker, Select, Typography } from 'antd';
+// import { Form, Input, DatePicker, Select, Typography } from 'antd';
 import { StyledButton, StyledEditBookWrapper, StyledSpinnerWrapper } from './style';
 import Spinner from '../Spinner';
 import { Spring, config } from 'react-spring/renderprops';
 import moment from 'moment';
+
+// antd imports
+import Form from 'antd/lib/form';
+import Input from 'antd/lib/input';
+import Typography from 'antd/lib/typography';
+import Select from 'antd/lib/select';
+import DatePicker from 'antd/lib/date-picker';
 
 interface Props {
   data: any;

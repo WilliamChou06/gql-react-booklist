@@ -9,8 +9,15 @@ import { Spring, config } from 'react-spring/renderprops';
 import { Link } from 'react-router-dom';
 
 
-import { Table, Input, Icon, Button } from 'antd';
+// import { Table, Input, Icon, Button } from 'antd';
 import Highlighter from 'react-highlight-words';
+
+// antd imports
+import Table from 'antd/lib/table';
+import Input from 'antd/lib/input';
+import Button from 'antd/lib/button';
+import Icon from 'antd/lib/icon';
+
 
 interface Props {
   data: any;

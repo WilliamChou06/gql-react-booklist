@@ -1,8 +1,14 @@
 import React from 'react'
 import { graphql } from 'react-apollo';
 import { addAuthorMutation, getAuthorsQuery } from '../../queries';
-import { Form, Input, Button, Typography } from 'antd'
+// import { Form, Input, Button, Typography } from 'antd';
 import { StyledAddAuthorContainer } from './style';
+
+// antd imports
+import Form from 'antd/lib/form';
+import Input from 'antd/lib/input';
+import Button from 'antd/lib/button';
+import Typography from 'antd/lib/typography';
 
 
 // Component interfaces
@@ -35,20 +41,20 @@ const AddAuthor = React.memo((props: Props) => {
     });
   };
 
-    const { getFieldDecorator } = props.form
-    return (
-      <StyledAddAuthorContainer>
-        <Typography.Title level={2}>Author</Typography.Title>
-        <Form onSubmit={handleSubmit}>
-          <Form.Item>
-            {getFieldDecorator('name')(
-              <Input placeholder="Add Author"></Input>
-            )}
-          </Form.Item>
-          <Button htmlType="submit" type="primary" ghost>Add Author</Button>
-        </Form>
-      </StyledAddAuthorContainer>
-    )
+  const { getFieldDecorator } = props.form
+  return (
+    <StyledAddAuthorContainer>
+      <Typography.Title level={2}>Author</Typography.Title>
+      <Form onSubmit={handleSubmit}>
+        <Form.Item>
+          {getFieldDecorator('name')(
+            <Input placeholder="Add Author"></Input>
+          )}
+        </Form.Item>
+        <Button htmlType="submit" type="primary" ghost>Add Author</Button>
+      </Form>
+    </StyledAddAuthorContainer>
+  )
 })
 
 const WrappedAddAuthor = Form.create({ name: 'add_book' })(AddAuthor);
