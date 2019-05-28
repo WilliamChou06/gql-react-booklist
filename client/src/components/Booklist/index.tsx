@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { graphql, compose } from 'react-apollo';
 import moment from 'moment';
-import _ from 'lodash';
+import uniqBy from 'lodash/uniqBy';
 import { getBooksQuery, deleteBookMutation } from '../../queries';
 import { StyledBooklistContainer } from './style';
 import Spinner from '../Spinner';
@@ -73,7 +73,7 @@ class BookList extends Component<Props, State> {
     const authorsFilter = [];
     const books = this.props.getBooksQuery.books;
     books.forEach(book => book.authors.forEach(author => authorsFilter.push({ text: author.name, value: author.name })));
-    return _.uniqBy(authorsFilter, 'value')
+    return uniqBy(authorsFilter, 'value')
   }
 
   // antd search filter

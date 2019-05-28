@@ -14,7 +14,7 @@ interface Props {
 }
 
 
-const AddAuthor = (props: Props) => {
+const AddAuthor = React.memo((props: Props) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -49,7 +49,7 @@ const AddAuthor = (props: Props) => {
         </Form>
       </StyledAddAuthorContainer>
     )
-}
+})
 
 const WrappedAddAuthor = Form.create({ name: 'add_book' })(AddAuthor);
 
