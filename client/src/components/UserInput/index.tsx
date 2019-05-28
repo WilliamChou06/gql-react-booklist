@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from 'react';
+import AddAuthor from '../AddAuthor';
 import { UserInputWrapper } from './style';
 import Spinner from '../Spinner';
 import { Spring, config } from 'react-spring/renderprops';
@@ -6,7 +7,7 @@ import { Spring, config } from 'react-spring/renderprops';
 
 
 // Lazy loading
-const AddAuthor = lazy(() => import('../AddAuthor'))
+// const AddAuthor = lazy(() => import('../AddAuthor'))
 const AddBook = lazy(() => import('../AddBook'))
 
 
@@ -16,10 +17,7 @@ const UserInput = () => (
   from={{  transform: 'scale(0)'}}
   to={{  transform: 'scale(1)'}}>
   {props => <UserInputWrapper style={props}>
-    <Suspense fallback={<Spinner />}>
       <AddAuthor />
-    </Suspense>
-
     <Suspense fallback={<Spinner />}>
       <AddBook />
     </Suspense>
