@@ -9,13 +9,14 @@ import { ApolloProvider } from 'react-apollo';
 
 
 // antd css imports
-// import 'antd/dist/antd.css';
 import 'antd/lib/date-picker/style/css';
 import 'antd/lib/form/style/css';
 import 'antd/lib/button/style/css';
 import 'antd/lib/typography/style/css';
 import 'antd/lib/select/style/css';
 import 'antd/lib/table/style/css';
+
+import GlobalStyle from './GlobalStyle';
 
 
 import * as serviceWorker from './serviceWorker';
@@ -52,15 +53,16 @@ ReactDOM.render(
       <AnimatedRoute>
         {location => (
           <Switch location={location}>
-          <Route exact path="/" render={(props) => <Suspense fallback={<Spinner />}>
-            <App {...props} />
-          </Suspense>} />
-          <Route path="/edit/:bookId" render={(props) => <Suspense fallback={<Spinner />}>
-            <EditBook {...props} />
-          </Suspense>} />
-        </Switch>
+            <Route exact path="/" render={(props) => <Suspense fallback={<Spinner />}>
+              <GlobalStyle />
+              <App {...props} />
+            </Suspense>} />
+            <Route path="/edit/:bookId" render={(props) => <Suspense fallback={<Spinner />}>
+              <EditBook {...props} />
+            </Suspense>} />
+          </Switch>
         )}
-        </AnimatedRoute>
+      </AnimatedRoute>
     </BrowserRouter>
   </ApolloProvider>
   , document.getElementById('root'));

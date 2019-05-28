@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { graphql, compose } from 'react-apollo';
 import moment from 'moment';
 import uniqBy from 'lodash/uniqBy';
@@ -31,7 +31,7 @@ interface State {
   windowWidth: number
 }
 
-class BookList extends Component<Props, State> {
+class BookList extends PureComponent<Props, State> {
   state = {
     searchText: '',
     authorsTabFilter: '',
@@ -208,7 +208,7 @@ class BookList extends Component<Props, State> {
     return (
       <Spring native
       config={config.gentle}
-      from={{  transform: 'scale(0) translateZ(0)'}}
+      from={{ opacity: 0, transform: 'scale(0) translateZ(0)'}}
       to={{ opacity: 1, transform: 'scale(1) translateZ(0)'}}>
         
         {animProps => <StyledBooklistContainer style={animProps}>
