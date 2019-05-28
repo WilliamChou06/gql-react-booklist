@@ -5,7 +5,7 @@ import { addAuthorMutation, getAuthorsQuery } from '../../queries';
 import { StyledAddAuthorContainer } from './style';
 
 // antd imports
-import Form from 'antd/lib/form';
+import Form from 'antd/lib/form'; 
 import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import Typography from 'antd/lib/typography';

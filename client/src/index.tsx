@@ -1,14 +1,23 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import Spinner from './components/Spinner';
-import { Transition, animated, config } from 'react-spring/renderprops'
+import { Transition, animated } from 'react-spring/renderprops'
 import { Route, Switch, BrowserRouter } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
 
-import 'antd/dist/antd.css'
+// antd css imports
+// import 'antd/dist/antd.css';
+import 'antd/lib/date-picker/style/css';
+import 'antd/lib/form/style/css';
+import 'antd/lib/button/style/css';
+import 'antd/lib/typography/style/css';
+import 'antd/lib/select/style/css';
+import 'antd/lib/table/style/css';
+
+
 import * as serviceWorker from './serviceWorker';
 
 const EditBook = lazy(() => import('./components/EditBook'));
