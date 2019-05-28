@@ -208,8 +208,8 @@ class BookList extends Component<Props, State> {
     return (
       <Spring native
       config={config.gentle}
-      from={{  transform: 'scale(0)', backfaceVisibility: 'hidden'}}
-      to={{ opacity: 1, transform: 'scale(1)', backfaceVisibility: 'hidden'}}>
+      from={{  transform: 'scale(0) translateZ(0)'}}
+      to={{ opacity: 1, transform: 'scale(1) translateZ(0)'}}>
         
         {animProps => <StyledBooklistContainer style={animProps}>
           <Table dataSource={this.props.getBooksQuery.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'middle' : 'small'} />
