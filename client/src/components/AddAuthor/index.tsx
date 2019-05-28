@@ -57,7 +57,7 @@ const AddAuthor = React.memo((props: Props) => {
   )
 })
 
-const WrappedAddAuthor = Form.create({ name: 'add_book' })(AddAuthor);
+const WrappedAddAuthor = Form.create({ name: 'add_author' })(AddAuthor);
 
 // @ts-ignore
 export default graphql(addAuthorMutation)(WrappedAddAuthor);
