@@ -1,10 +1,11 @@
 import React, { lazy, Suspense } from 'react';
 import ReactGA from 'react-ga';
 import { StyledApp } from './style';
+import Booklist from '../Booklist';
 import UserInput from '../UserInput';
 import Spinner from '../Spinner';
 
-const Booklist = lazy(() => import('../Booklist'));
+// const Booklist = lazy(() => import('../Booklist'));
 // const UserInput = lazy(() => import('../UserInput'));
 
 // Check if production:
