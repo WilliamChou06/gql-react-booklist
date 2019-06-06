@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { graphql, compose } from 'react-apollo';
 import {
   getAuthorsQuery,
@@ -21,7 +21,6 @@ import moment from 'moment';
 // antd imports
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Typography from 'antd/lib/typography';
 import Select from 'antd/lib/select';
 import DatePicker from 'antd/lib/date-picker';
 
@@ -36,10 +35,22 @@ interface Props {
 }
 
 const EditBook = (props: Props) => {
+  const [bookTitle, setBookTitle] = useState();
+
+  useEffect(() => {
+    if (!props.getBookQuery.loading) {
+      setBookTitle(props.getBookQuery.book.title);
+    }
+  }, [props.getBookQuery.loading]);
+
   // Push to root directory if cancel btn clicked
   const handleCancel = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     props.history.push('/');
+  };
+
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setBookTitle(e.currentTarget.value);
   };
 
   // Call mutation to GraphQL server and refresh book queries
@@ -89,12 +100,12 @@ const EditBook = (props: Props) => {
       {animProps => (
         <StyledEditBookWrapper style={animProps}>
           <StyledEditBookContainer>
-            <EditingTitle level={2}>Editing: {book.title}</EditingTitle>
+            <EditingTitle level={2}>Editing: {bookTitle}</EditingTitle>
             <Form onSubmit={handleSubmit}>
               <Form.Item>
                 {getFieldDecorator('title', {
-                  initialValue: book.title,
-                })(<Input placeholder="Book Title" />)}
+                  initialValue: bookTitle,
+                })(<Input onChange={handleChange} placeholder="Book Title" />)}
               </Form.Item>
               <Form.Item>
                 {getFieldDecorator('edition', {
