@@ -1,12 +1,10 @@
 import React, { lazy, Suspense } from 'react';
 import ReactGA from 'react-ga';
 import { StyledApp } from './style';
-import Booklist from '../Booklist';
-import UserInput from '../UserInput';
 import Spinner from '../Spinner';
 
-// const Booklist = lazy(() => import('../Booklist'));
-// const UserInput = lazy(() => import('../UserInput'));
+const Booklist = lazy(() => import('../Booklist'));
+const UserInput = lazy(() => import('../UserInput'));
 
 // Check if production:
 // React Google Analytics config
@@ -15,15 +13,13 @@ if (process.env.NODE_ENV === 'production') {
   ReactGA.pageview(window.location.pathname + window.location.search);
 }
 
-
-
 const App: React.FC = () => (
-  <StyledApp>
-    <Suspense fallback={<Spinner />}>
+  <Suspense fallback={<Spinner />}>
+    <StyledApp>
       <Booklist />
-    </Suspense>
       <UserInput />
-  </StyledApp>
-)
+    </StyledApp>
+  </Suspense>
+);
 
 export default App;

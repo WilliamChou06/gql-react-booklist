@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { graphql, compose } from 'react-apollo';
 import moment from 'moment';
 import uniqBy from 'lodash/uniqBy';
@@ -7,7 +7,6 @@ import { StyledBooklistContainer } from './style';
 import Spinner from '../Spinner';
 import { Spring, config } from 'react-spring/renderprops';
 import { Link } from 'react-router-dom';
-
 
 // import { Table, Input, Icon, Button } from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -18,96 +17,103 @@ import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 
-
 interface Props {
   data: any;
   getBooksQuery: any;
   deleteBookMutation: any;
 }
 
-interface State {
-  searchText: string,
-  authorsTabFilter: string,
-  windowWidth: number
-}
+const BookList: React.FC<Props> = props => {
+  const [searchText, setSearchText] = useState<string>('');
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
 
-class BookList extends PureComponent<Props, State> {
-  state = {
-    searchText: '',
-    authorsTabFilter: '',
-    windowWidth: window.innerWidth
-  }
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowWidth);
+    return () => {
+      window.removeEventListener('resize', updateWindowWidth);
+    };
+  });
 
   // Updating window width in state
-  componentDidMount() {
-    window.addEventListener('resize', this.updateWindowWidth)
-  }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowWidth)
-  }
+  const updateWindowWidth = (): void => setWindowWidth(window.innerWidth);
 
-  updateWindowWidth = () => this.setState({ windowWidth: window.innerWidth })
-
-  handleDeleteBook = (id) => {
-    this.props.deleteBookMutation({
+  const handleDeleteBook = (id: number | string): void => {
+    props.deleteBookMutation({
       variables: {
-        id
+        id,
       },
-      refetchQueries: [{
-        query: getBooksQuery
-      }]
+      refetchQueries: [
+        {
+          query: getBooksQuery,
+        },
+      ],
     });
-    return false;
-  }
+  };
 
   // Edition sorting method
 
-  sortEditions = (a, b) => {
+  const sortEditions = (a, b) => {
     if (a.edition > b.edition) {
-      return 1
+      return 1;
     }
     if (a.edition === b.edition) {
-      return 0
+      return 0;
     }
-    return -1
-  }
-
+    return -1;
+  };
 
   // Get all table Author tab filters
   // Ugly implementation
-  getAllAuthorsList = () => {
+  const getAllAuthorsList = (): object[] => {
     const authorsFilter = [];
-    const books = this.props.getBooksQuery.books;
-    books.forEach(book => book.authors.forEach(author => authorsFilter.push({ text: author.name, value: author.name })));
-    return uniqBy(authorsFilter, 'value')
-  }
+    const books = props.getBooksQuery.books;
+    books.forEach(book =>
+      book.authors.forEach(author =>
+        authorsFilter.push({ text: author.name, value: author.name })
+      )
+    );
+    return uniqBy(authorsFilter, 'value');
+  };
+
+  let searchInput: React.ReactNode;
 
   // antd search filter
-  getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={node => {
             // @ts-ignore
-            this.searchInput = node;
+            searchInput = node;
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
         <Button
           type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm)}
+          onClick={() => handleSearch(selectedKeys, confirm)}
           icon="search"
           size="small"
           style={{ width: 90, marginRight: 8 }}
         >
           Search
         </Button>
-        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+        <Button
+          onClick={() => handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
           Reset
         </Button>
       </div>
@@ -119,109 +125,150 @@ class BookList extends PureComponent<Props, State> {
       return record[dataIndex]
         .toString()
         .toLowerCase()
-        .includes(value.toLowerCase())
+        .includes(value.toLowerCase());
     },
     onFilterDropdownVisibleChange: visible => {
       if (visible) {
         // @ts-ignore
-        setTimeout(() => this.searchInput.select());
+        setTimeout(() => searchInput.select());
       }
     },
     render: text => (
       <Highlighter
         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-        searchWords={[this.state.searchText]}
+        searchWords={[searchText]}
         autoEscape
         textToHighlight={text.toString()}
       />
     ),
   });
 
-  handleSearch = (selectedKeys, confirm) => {
+  const handleSearch = (selectedKeys, confirm) => {
     confirm();
-    this.setState({ searchText: selectedKeys[0] });
+    setSearchText(selectedKeys[0]);
   };
 
-  handleReset = clearFilters => {
+  const handleReset = clearFilters => {
     clearFilters();
-    this.setState({ searchText: '' });
+    setSearchText('');
   };
 
-  render() {
-    if (this.props.getBooksQuery.loading) {
-      return <Spinner />
-    }
+  if (props.getBooksQuery.loading) {
+    return <Spinner />;
+  }
 
-    // Table columns and sorting functions
-    const columns = [
-      {
-        title: 'Title',
-        dataIndex: 'title',
-        key: 'title',
-        width: 300,
-        sorter: (a, b) => a.title.localeCompare(b.title),
-        ...this.getColumnSearchProps('title')
+  // Table columns and sorting functions
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+      width: 300,
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      ...getColumnSearchProps('title'),
+    },
+    {
+      title: 'Edition',
+      dataIndex: 'edition',
+      key: 'edition',
+      width: 100,
+      render: date => date && moment(date).format('DD/MM/YYYY'),
+      sorter: sortEditions,
+    },
+    {
+      title: (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <p style={{ marginBottom: 0 }}>
+            #<Icon type="user" />
+          </p>
+        </div>
+      ),
+      dataIndex: 'authors',
+      key: '#authors',
+      width: 60,
+      render: authors => (
+        <div style={{ width: '100%', textAlign: 'center' }}>
+          {authors.length}
+        </div>
+      ),
+      sorter: (a, b) => a.authors.length - b.authors.length,
+    },
+    {
+      title: 'Authors',
+      dataIndex: 'authors',
+      key: 'authors',
+      render: authors => authors.map(author => author.name).join(', '),
+      sorter: (a, b) => a.authors[0].name.localeCompare(b.authors[0].name),
+      filters: getAllAuthorsList(),
+      onFilter: (value, record) =>
+        record.authors
+          .map(author => author.name)
+          .join(', ')
+          .indexOf(value) >= 0,
+    },
+    {
+      title: 'Actions',
+      render: book => {
+        // Rendering actions for each table item
+        // Icon style is in-line because it's too much of a hassle to
+        // put in style.ts at the moment
+        return (
+          <span style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Link title="Edit" to={`/edit/${book.id}`}>
+              <Icon style={{ fontSize: '18px' }} type="edit" />
+            </Link>
+            <a title="Delete" onClick={() => handleDeleteBook(book.id)}>
+              <Icon
+                style={{ fontSize: '18px', color: '#ff4d4f' }}
+                type="delete"
+              />
+            </a>
+          </span>
+        );
       },
-      {
-        title: 'Edition',
-        dataIndex: 'edition',
-        key: 'edition',
-        width: 100,
-        render: date => date && moment(date).format('DD/MM/YYYY'),
-        sorter: this.sortEditions
-      },
-      {
-        title: <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}><p style={{ marginBottom: 0 }}>#<Icon type="user" /></p></div>,
-        dataIndex: 'authors',
-        key: '#authors',
-        width: 60,
-        render: authors => <div style={{ width: '100%', textAlign: 'center' }} >{authors.length}</div>,
-        sorter: (a, b) => a.authors.length - b.authors.length,
+    },
+  ];
 
-      },
-      {
-        title: 'Authors',
-        dataIndex: 'authors',
-        key: 'authors',
-        render: authors => authors.map(author => author.name).join(', '),
-        sorter: (a, b) => a.authors[0].name.localeCompare(b.authors[0].name),
-        filters: this.getAllAuthorsList(),
-        onFilter: (value, record) => record.authors.map(author => author.name).join(', ').indexOf(value) >= 0
-      },
-      {
-        title: 'Actions',
-        render: book => {
-          // Rendering actions for each table item
-          // Icon style is in-line because it's too much of a hassle to 
-          // put in style.ts at the moment
-          return <span style={{ display: 'flex', justifyContent: 'space-evenly' }}><Link title="Edit" to={`/edit/${book.id}`}><Icon style={{ fontSize: '18px' }} type="edit" /></Link><a title="Delete" onClick={() => this.handleDeleteBook(book.id)}><Icon style={{ fontSize: '18px', color: '#ff4d4f' }} type="delete" /></a></span>
-        }
-      }
-    ]
-
-    const windowWidth = window.innerWidth;
-    const columnsMobile = columns.map((column) => {
+  const columnsMobile: object[] = columns
+    .map(column => {
       delete column.width;
       return column;
-    }).filter((column) => column !== columns[2]);
+    })
+    .filter(column => column !== columns[2]);
 
-    return (
-      <Spring native
+  return (
+    <Spring
+      native
       config={config.gentle}
-      from={{ opacity: 0, transform: 'scale(0) translateZ(0)', willChange: 'scale translateZ'}}
-      to={{ opacity: 1, transform: 'scale(1) translateZ(0)'}}>
-        
-        {animProps => <StyledBooklistContainer style={animProps}>
-          <Table dataSource={this.props.getBooksQuery.books} columns={windowWidth > 960 ? columns : columnsMobile} size={windowWidth > 960 ? 'middle' : 'small'} />
-        </StyledBooklistContainer>}
-      </Spring>
-
-    );
-  }
+      from={{
+        opacity: 0,
+        transform: 'scale(0) translateZ(0)',
+        willChange: 'scale translateZ',
+      }}
+      to={{ opacity: 1, transform: 'scale(1) translateZ(0)' }}
+    >
+      {animProps => (
+        <StyledBooklistContainer style={animProps}>
+          <Table
+            dataSource={props.getBooksQuery.books}
+            columns={windowWidth > 960 ? columns : columnsMobile}
+            size={windowWidth > 960 ? 'middle' : 'small'}
+          />
+        </StyledBooklistContainer>
+      )}
+    </Spring>
+  );
 };
 
 // @ts-ignore
 export default compose(
   graphql(getBooksQuery, { name: 'getBooksQuery' }),
   graphql(deleteBookMutation, { name: 'deleteBookMutation' })
-)(BookList)
+)(BookList);
