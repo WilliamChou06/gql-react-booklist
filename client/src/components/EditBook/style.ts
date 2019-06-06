@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-// import { Button } from 'antd';
+import { Typography } from 'antd';
 import { animated } from 'react-spring/renderprops';
 
 // antd import
@@ -33,4 +33,8 @@ export const StyledSpinnerWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const EditingTitle = styled(Typography.Title)`
+  word-break: break-all;
 `;

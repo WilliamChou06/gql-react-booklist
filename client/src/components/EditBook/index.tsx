@@ -1,8 +1,19 @@
 import React from 'react';
 import { graphql, compose } from 'react-apollo';
-import { getAuthorsQuery, getBookQuery, editBookMutation, getBooksQuery } from '../../queries';
+import {
+  getAuthorsQuery,
+  getBookQuery,
+  editBookMutation,
+  getBooksQuery,
+} from '../../queries';
 // import { Form, Input, DatePicker, Select, Typography } from 'antd';
-import { StyledButton, StyledEditBookWrapper, StyledSpinnerWrapper, StyledEditBookContainer } from './style';
+import {
+  StyledButton,
+  StyledEditBookWrapper,
+  StyledSpinnerWrapper,
+  StyledEditBookContainer,
+  EditingTitle,
+} from './style';
 import Spinner from '../Spinner';
 import { Spring, config } from 'react-spring/renderprops';
 import moment from 'moment';
@@ -21,17 +32,15 @@ interface Props {
   match: any;
   getBookQuery: any;
   editBookMutation: any;
-  history: any
+  history: any;
 }
 
-
 const EditBook = (props: Props) => {
-
   // Push to root directory if cancel btn clicked
   const handleCancel = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     props.history.push('/');
-  }
+  };
 
   // Call mutation to GraphQL server and refresh book queries
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,72 +53,86 @@ const EditBook = (props: Props) => {
             id: props.match.params.bookId,
             title,
             edition,
-            authorsId: authors
+            authorsId: authors,
           },
-          refetchQueries: [{
-            query: getBooksQuery
-          },]
+          refetchQueries: [
+            {
+              query: getBooksQuery,
+            },
+          ],
         });
         props.history.push('/');
       }
     });
   };
-  
 
-  const { getFieldDecorator } = props.form
+  const { getFieldDecorator } = props.form;
 
   if (props.getAuthorsQuery.loading || !props.getBookQuery.book) {
-    return <StyledSpinnerWrapper><Spinner /></StyledSpinnerWrapper>;
+    return (
+      <StyledSpinnerWrapper>
+        <Spinner />
+      </StyledSpinnerWrapper>
+    );
   }
 
   // Store book object in variable
   let book = props.getBookQuery.book;
-  let authorIds = book.authors.map(author => author.id)
+  let authorIds = book.authors.map(author => author.id);
   return (
-
-    <Spring native
+    <Spring
+      native
       config={config.gentle}
-      from={{  transform: 'scale(0)', backfaceVisibility: 'hidden'}}
-      to={{ opacity: 1, transform: 'scale(1)', backfaceVisibility: 'hidden'}}>
-        
-        {animProps => <StyledEditBookWrapper style={animProps}>
-      <StyledEditBookContainer>
-        <Typography.Title level={2}>Editing: {book.title}</Typography.Title>
-        <Form onSubmit={handleSubmit}>
-          <Form.Item>
-            {getFieldDecorator('title', {
-              initialValue: book.title
-            })(
-              <Input placeholder="Book Title" ></Input>
-
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('edition', {
-              // set book edition moment
-              initialValue: moment(book.edition)
-            })(
-              <DatePicker placeholder="Select edition date" format="YYYY-MM-DD HH:mm:ss" />
-
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('authors', {
-              initialValue: authorIds
-            })(<Select mode="multiple" placeholder="Select authors">
-              {props.getAuthorsQuery.authors.map((author) => <Select.Option key={author.id} value={author.id}>{author.name}</Select.Option>)}
-            </Select>)}
-          </Form.Item>
-          <StyledButton htmlType="submit" type="primary" ghost>Edit Book</StyledButton>
-          <StyledButton onClick={handleCancel} type="danger" ghost>Cancel</StyledButton>
-        </Form>
-      </StyledEditBookContainer>
-    </StyledEditBookWrapper>}
-      </Spring>
-    
-  )
-
-}
+      from={{ transform: 'scale(0)', backfaceVisibility: 'hidden' }}
+      to={{ opacity: 1, transform: 'scale(1)', backfaceVisibility: 'hidden' }}
+    >
+      {animProps => (
+        <StyledEditBookWrapper style={animProps}>
+          <StyledEditBookContainer>
+            <EditingTitle level={2}>Editing: {book.title}</EditingTitle>
+            <Form onSubmit={handleSubmit}>
+              <Form.Item>
+                {getFieldDecorator('title', {
+                  initialValue: book.title,
+                })(<Input placeholder="Book Title" />)}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('edition', {
+                  // set book edition moment
+                  initialValue: moment(book.edition),
+                })(
+                  <DatePicker
+                    placeholder="Select edition date"
+                    format="YYYY-MM-DD HH:mm:ss"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('authors', {
+                  initialValue: authorIds,
+                })(
+                  <Select mode="multiple" placeholder="Select authors">
+                    {props.getAuthorsQuery.authors.map(author => (
+                      <Select.Option key={author.id} value={author.id}>
+                        {author.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
+              </Form.Item>
+              <StyledButton htmlType="submit" type="primary" ghost>
+                Edit Book
+              </StyledButton>
+              <StyledButton onClick={handleCancel} type="danger" ghost>
+                Cancel
+              </StyledButton>
+            </Form>
+          </StyledEditBookContainer>
+        </StyledEditBookWrapper>
+      )}
+    </Spring>
+  );
+};
 
 // antd form HOF
 const WrappedEditBook = Form.create({ name: 'edit_book' })(EditBook);
@@ -124,9 +147,9 @@ export default compose(
     options: (props: Props) => {
       return {
         variables: {
-          id: props.match.params.bookId
-        }
-      }
-    }
-  }),
+          id: props.match.params.bookId,
+        },
+      };
+    },
+  })
 )(WrappedEditBook);
